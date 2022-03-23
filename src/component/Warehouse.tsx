@@ -22,6 +22,6 @@ export const Warehouse = () => {
     return <>
         <ResponsiveAppBar/>
         <div>Hello GP WAREHOUSE!!</div>
-        <div>{test.loading ? 'LOADING...' : test.data.map(data => data.name)}</div>
+        <div>{test.loading ? 'LOADING....' : test.data.map(data => data.name)}</div>
     </>
 }
