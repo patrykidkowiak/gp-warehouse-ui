@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import { TestService } from '../service/TestService';
 import { Response } from '../core/utils/interfaces'
+import ResponsiveAppBar from './app-bar/ResponsiveAppBar';
+import { Product, ProductService } from '../service/ProductService';
 
 export const Warehouse = () => {
-    const [test, setTest] = useState<Response<string>>({data: 'ERROR', loading: true});
+    const [test, setTest] = useState<Response<Product[]>>({data: [], loading: true});
 
     useEffect(() => {
         (async () => {
-            setTest({data: 'LOADING...', loading: true});
+            setTest({data: [], loading: true});
             try {
-                const {data} = await TestService.getTest();
+                const {data} = await ProductService.getProducts();
                 setTest({data: data, loading: false});
             } catch (error) {
-                setTest({data: 'ERROR', loading: false});
+                setTest({data: [], loading: false});
             }
         })()
     }, []);
 
     return <>
+        <ResponsiveAppBar/>
         <div>Hello GP WAREHOUSE!!</div>
-        <div>api test: {test.data}</div>
+        <div>{test.loading ? 'LOADING...' : test.data.map(data => data.name)}</div>
     </>
 }
