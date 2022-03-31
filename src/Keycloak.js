@@ -1,8 +1,10 @@
 import Keycloak from "keycloak-js";
+import {KEYCLOAK_CLIENT_ID, KEYCLOAK_REALM, KEYCLOAK_URL} from "./core/envvars";
+
 const keycloak = new Keycloak({
-    url: "https://gp-warehouse-keycloak.onrender.com/auth",
-    realm: "gp-warehouse-realm",
-    clientId: "localhost"
+    url: KEYCLOAK_URL,
+    realm: KEYCLOAK_REALM,
+    clientId: KEYCLOAK_CLIENT_ID
 });
 
 export default keycloak;

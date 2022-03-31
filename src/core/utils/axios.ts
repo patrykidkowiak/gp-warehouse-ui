@@ -1,6 +1,5 @@
 import Axios from 'axios';
-
-export const GP_WAREHOUSE_BACKEND = process.env.NODE_ENV === 'production' ? 'http://localhost:8080' : 'https://gp-warehouse-backend.onrender.com';
+import { GP_WAREHOUSE_BACKEND } from '../envvars';
 
 const axios = Axios.create({
     baseURL: GP_WAREHOUSE_BACKEND,
