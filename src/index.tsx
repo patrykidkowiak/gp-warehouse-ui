@@ -5,7 +5,7 @@ import App from './App';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import keycloak from './Keycloak';
 
-console.log(process.env.KEYCLOAK_URL)
+console.log(process.env.REACT_APP_TEST_VAR)
 console.log(process.env)
 
 ReactDOM.render(
