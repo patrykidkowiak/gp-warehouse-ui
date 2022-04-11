@@ -3,7 +3,8 @@ import { AxiosResponse } from 'axios';
 
 export interface Product {
     id: number,
-    name: string
+    name: string,
+    weight: number,
 }
 
 export class ProductService {

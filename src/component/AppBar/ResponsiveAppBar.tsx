@@ -39,14 +39,14 @@ const ResponsiveAppBar = () => {
         <AppBar position="static">
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
-                    <Typography
-                        variant="h6"
-                        noWrap
-                        component="div"
-                        sx={{mr: 2, display: {xs: 'none', md: 'flex'}}}
-                    >
-                        LOGO
-                    </Typography>
+                    <Box
+                        component="img"
+                        sx={{
+                            height: 70,
+                            width: 70,
+                        }}
+                        src='logo_without_name.png'
+                    />
 
                     <Box sx={{flexGrow: 1, display: {xs: 'flex', md: 'none'}}}>
                         <IconButton

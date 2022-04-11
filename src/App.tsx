@@ -1,19 +1,18 @@
 import React from 'react';
 import './App.css';
-import { createTheme, ThemeProvider } from '@mui/material';
+import { CircularProgress, createTheme, ThemeProvider } from '@mui/material';
 import { pink, yellow } from '@mui/material/colors';
 import {
     BrowserRouter as Router,
     Routes,
     Route,
 } from "react-router-dom";
-import ResponsiveAppBar from './component/app-bar/ResponsiveAppBar';
+import ResponsiveAppBar from './component/AppBar/ResponsiveAppBar';
 import { Warehouse } from './component/Warehouse';
-
+import { useKeycloak } from '@react-keycloak/web';
+import { WakeupService } from './service/WakeupService';
 
 function App() {
-    console.log(`NODE_ENV:  ${process.env.NODE_ENV}`);
-
     const theme = createTheme({
         palette: {
             primary: pink,
@@ -21,15 +20,22 @@ function App() {
         },
     });
 
+    const {keycloak} = useKeycloak();
+
+    WakeupService.wakeup();
+
     return (
-        <div className="App">
+        <div className="App" style={{textAlign: "center"}}>
             <ThemeProvider theme={theme}>
-                <Router>
-                    <ResponsiveAppBar/>
-                    <Routes>
-                        <Route path="/" element={<Warehouse/>}/>
-                    </Routes>
-                </Router>
+                {
+                    keycloak.authenticated ?
+                        <Router>
+                            <ResponsiveAppBar/>
+                            <Routes>
+                                <Route path="/" element={<Warehouse/>}/>
+                            </Routes>
+                        </Router> : <CircularProgress color="primary"/>
+                }
             </ThemeProvider>
         </div>
     );
