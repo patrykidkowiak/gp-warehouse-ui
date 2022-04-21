@@ -33,6 +33,13 @@ export class StoredProductService {
             }
         });
     }
+    public static getNexValue = async (token?: string): Promise<AxiosResponse<number>> => {
+        return axios.get(`api/v1/stored-product/nextValue`, {
+            headers: {
+                'Authorization': bearerAuth(token)
+            }
+        });
+    }
 }
 
 export const bearerAuth = (token?: string) => {
