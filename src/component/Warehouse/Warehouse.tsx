@@ -123,7 +123,7 @@ export const Warehouse: FC = () => {
                                         }
                                         >
                                             {place.status === 'STORED' ? <StyledCarouselButton variant="contained"/> :
-                                                <StyledCarouselButton variant="outlined"/>}
+                                                <StyledCarouselButton variant="outlined" onClick={() => {setOpenIn(true)}}/>}
                                         </Tooltip>
                                     ))}
                                 </StyledCarouselContent>
