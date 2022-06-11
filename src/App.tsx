@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import { CircularProgress, createTheme, ThemeProvider } from '@mui/material';
+import { Backdrop, BottomNavigation, Card, CardContent, CircularProgress, createTheme, ThemeProvider } from '@mui/material';
 import { pink, yellow } from '@mui/material/colors';
 import {
     BrowserRouter as Router,
@@ -8,9 +8,10 @@ import {
     Route,
 } from "react-router-dom";
 import ResponsiveAppBar from './component/AppBar/ResponsiveAppBar';
-import { Warehouse } from './component/Warehouse';
+import { Warehouse } from './component/Warehouse/Warehouse';
 import { useKeycloak } from '@react-keycloak/web';
 import { WakeupService } from './service/WakeupService';
+import { Products } from './component/Products/Products';
 
 function App() {
     const theme = createTheme({
@@ -33,8 +34,15 @@ function App() {
                             <ResponsiveAppBar/>
                             <Routes>
                                 <Route path="/" element={<Warehouse/>}/>
+                                <Route path="/products" element={<Products/>}/>
                             </Routes>
-                        </Router> : <CircularProgress color="primary"/>
+                        </Router> :
+                        <Backdrop
+                            sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+                            open={!!keycloak.authenticated}
+                        >
+                            <CircularProgress color="primary"/>
+                        </Backdrop>
                 }
             </ThemeProvider>
         </div>

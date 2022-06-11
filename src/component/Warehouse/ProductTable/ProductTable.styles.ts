@@ -19,7 +19,12 @@ export const StyledTableRowCell = styled(TableCell)({
 })
 
 export const StyledOperationButton = styled(Button)({
-    height: '150px',
-    width: '50%',
+    // height: '150px',
+    width: '100%',
     fontSize: '2em'
+})
+
+export const StyledActionButtons = styled('div')({
+    textAlign: 'left',
+    marginLeft: '-20px',
 })
