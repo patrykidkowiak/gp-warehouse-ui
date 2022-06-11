@@ -1,5 +1,8 @@
 import { styled } from '@mui/styles';
 import { PieChart } from 'react-minimal-pie-chart/types/Chart';
+import Carousel from 'react-material-ui-carousel';
+import { Button, Paper } from '@mui/material';
+import { pink } from '@mui/material/colors';
 
 
 export const StyledWarehouse = styled('div')({
@@ -10,6 +13,15 @@ export const StyledWarehouse = styled('div')({
 })
 
 export const StyledButtonContainer = styled('div')({
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: '10px',
+    paddingTop: '20px',
+    // width: '200em'
+    height: '10em'
+})
+
+export const StyledDiagramsContainer = styled('div')({
     display: 'flex',
     justifyContent: 'space-between',
     gap: '10px',
@@ -33,10 +45,37 @@ export const StyledToPrint = styled('div')({
     },
 })
 
+export const StyledCarousel = styled(Carousel)({
+    // height: '500px'
+    width: '100%'
+})
+
 export const StyledBarCode = styled('div')({
     height: '50%'
 })
 
 export const StyledPieChart = styled('div')({
     width: '30%'
+})
+
+export const StyledCarouselPaper = styled(Paper)({
+    backgroundColor: pink['50'],
+    height: '200px'
+})
+
+export const StyledCarouselButton = styled(Button)({
+    height: '30px'
+})
+
+export const StyledCarouselContent = styled('div')({
+    display: 'flex',
+    justifyContent: 'center',
+    margin: 'auto',
+    width: '100%',
+    gap: '10px',
+    marginTop: '30px'
+})
+
+export const StyledCarouselTitle = styled('div')({
+    fontSize: '1.5em'
 })

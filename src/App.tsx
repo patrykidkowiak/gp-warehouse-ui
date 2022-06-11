@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import { Backdrop, BottomNavigation, Card, CardContent, CircularProgress, createTheme, ThemeProvider } from '@mui/material';
-import { pink, yellow } from '@mui/material/colors';
+import { grey, pink, yellow } from '@mui/material/colors';
 import {
     BrowserRouter as Router,
     Routes,
@@ -12,6 +12,8 @@ import { Warehouse } from './component/Warehouse/Warehouse';
 import { useKeycloak } from '@react-keycloak/web';
 import { WakeupService } from './service/WakeupService';
 import { Products } from './component/Products/Products';
+import { styled } from '@mui/styles';
+import { Footer } from './component/Footer/Footer';
 
 function App() {
     const theme = createTheme({
@@ -21,21 +23,31 @@ function App() {
         },
     });
 
+    const MyThemeComponent = styled('div')(({ theme: any }) => ({
+        // backgroundColor: grey.A100,
+        height: '100vh',
+        background: `linear-gradient(45deg, ${pink['50']} 30%, ${grey['50']} 10%)`,
+        // marginBottom: '130px'
+    }));
+
     const {keycloak} = useKeycloak();
 
     WakeupService.wakeup();
 
     return (
         <div className="App" style={{textAlign: "center"}}>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={theme} >
                 {
                     keycloak.authenticated ?
                         <Router>
-                            <ResponsiveAppBar/>
-                            <Routes>
-                                <Route path="/" element={<Warehouse/>}/>
-                                <Route path="/products" element={<Products/>}/>
-                            </Routes>
+                            <MyThemeComponent>
+                                <ResponsiveAppBar/>
+                                <Routes>
+                                    <Route path="/" element={<Warehouse/>}/>
+                                    <Route path="/products" element={<Products/>}/>
+                                </Routes>
+                            </MyThemeComponent>
+                            <Footer/>
                         </Router> :
                         <Backdrop
                             sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}

@@ -6,7 +6,8 @@ import Button from '@mui/material/Button';
 export const StyledTableContainer = styled(TableContainer)({
     margin: 'auto',
     marginTop: '20px',
-    width: '100%'
+    width: '100%',
+    marginBottom: '100px'
 })
 
 export const StyledTableHeadCell = styled(withTheme(TableCell))(props =>({
