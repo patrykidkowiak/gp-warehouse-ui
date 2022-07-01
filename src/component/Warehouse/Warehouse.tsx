@@ -1,20 +1,18 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Response } from '../../core/utils/interfaces'
 import { useKeycloak } from '@react-keycloak/web';
-import { StoredProduct, StoredProductService } from '../../service/StoredProductService';
+import {  RackColumn, Row, StoredProduct, StoredProductService } from '../../service/StoredProductService';
 import { ProductTable } from './ProductTable/ProductTable';
 import { StyledOperationButton } from './ProductTable/ProductTable.styles';
-import { StyledButtonContainer, StyledCarousel, StyledCarouselButton, StyledCarouselContent, StyledCarouselPaper, StyledCarouselTitle, StyledDiagramsContainer, StyledPieChart, StyledWarehouse } from './Warehouse.styles';
+import { StyledButtonContainer, StyledCarousel, StyledCarouselButton, StyledCarouselContent, StyledCarouselPaper, StyledCarouselTitle, StyledDiagramsContainer, StyledPieChart, StyledRow, StyledRows, StyledWarehouse } from './Warehouse.styles';
 import { SnackBarOptions, SnackbarWrapper } from '../SnackbarWrapper';
 import { ProductInDialog } from './ProductIn/ProductInDialog';
 import { LoadingOverlay } from '../LoadingOverlay';
 import { ProductOutDialog } from './ProductOut/ProductOutDialog';
 import { PieChart } from 'react-minimal-pie-chart';
-import { pink, yellow } from '@mui/material/colors';
+import { pink } from '@mui/material/colors';
 import { Place, PlaceService } from '../../service/PlaceService';
-import Carousel from 'react-material-ui-carousel'
 import { Button, Paper, Tooltip } from '@mui/material';
-import { Product } from '../../service/ProductService';
 
 export const initialSnackbarOptions: SnackBarOptions = {visible: false, message: ''};
 
@@ -28,6 +26,39 @@ export const Warehouse: FC = () => {
 
     // @ts-ignore
     const racks = [...new Map(places.data?.map(place => place.rack).map(item => [item['id'], item])).values()];
+
+    const getRowsByRackId = (rackId: number): Row[] => {
+        const freeRowsNonUnique = places.data?.filter(place => place.rack?.id === rackId).map(place => place.row);
+        // @ts-ignore
+        return [...new Map(freeRowsNonUnique?.map(item => [item['id'], item])).values()];
+    }
+
+    const getColumnByRackIdAndRowId = (rackId: number, rowId: number): RackColumn[] => {
+        const freeColumnsNonUnique = places.data?.filter(place => place.rack?.id === rackId && place.row?.id === rowId).map(place => place.column);
+        // @ts-ignore
+        return [...new Map(freeColumnsNonUnique?.map(item => [item['id'], item])).values()];
+    }
+
+    const map = racks.map(rack => {
+        return {
+            rack: rack,
+            rows: getRowsByRackId(rack.id)
+        }
+    }).map(rack => {
+            return {
+                rack: rack.rack,
+                rows: rack.rows.map(row => {
+                    return {
+                        row: row,
+                        columns: getColumnByRackIdAndRowId(rack.rack.id, row.id)
+                    }
+                })
+            }
+        }
+    );
+
+    console.log(map)
+
 
 
     const handleOpenIn = () => {
@@ -71,8 +102,8 @@ export const Warehouse: FC = () => {
     }, []);
 
 
-    const getProductByPlace = (place: Place): StoredProduct => {
-        return storedProducts.data?.find(product => product.rack.id === place.rack.id && product.rackColumn.id === place.column.id && product.row.id === place.row.id)
+    const getProductByPlace = (rackId: number, columnId: number, rowId: number): StoredProduct => {
+        return storedProducts.data?.find(product => product.rack.id === rackId && product.rackColumn.id === columnId && product.row.id === rowId)
     }
 
     const productStoredPercentage = 100 - (100 * places.data?.filter(place => place.status !== 'STORED')?.length) / places.data?.length || 0;
@@ -108,22 +139,33 @@ export const Warehouse: FC = () => {
                     navButtonsAlwaysVisible={true}
                 >
                     {
-                        racks.map(rack => (
+                        map.map(rack => (
                             <StyledCarouselPaper>
-                                <StyledCarouselTitle>Regał {rack.name}</StyledCarouselTitle>
+                                <StyledCarouselTitle>Regał {rack.rack.name}</StyledCarouselTitle>
                                 <StyledCarouselContent>
-                                    {places.data?.filter(place => place.rack.id === rack.id).map(place => (
-                                        <Tooltip title={
-                                            <>
-                                                <div>{`${rack.name} ${place.row.name} ${place.column.name}`}</div>
-                                                <div>{`${getProductByPlace(place)?.product.name || ''}`}</div>
-                                            </>
+                                    <div>
+                                        {
+                                            rack.rows.map(row => (<StyledRows>
+                                                {row.row.name}: {row.columns.map(column => (
+                                                <>
+                                                    <Tooltip title={
+                                                        <>
+                                                            <div>{`${rack.rack.name} ${row.row.name} ${column.name}`}</div>
+                                                            <div>{`${getProductByPlace(rack.rack.id, column.id, row.row.id)?.product.name || ''}`}</div>
+                                                        </>
+                                                    }
+                                                    >
+                                                        {getProductByPlace(rack.rack.id, column.id, row.row.id)?.status === 'STORED' ?
+                                                            <StyledCarouselButton variant="contained"/> :
+                                                            <StyledCarouselButton variant="outlined" onClick={() => {
+                                                                setOpenIn(true)
+                                                            }}/>}
+                                                    </Tooltip>
+                                                </>
+                                            ))}
+                                            </StyledRows>))
                                         }
-                                        >
-                                            {place.status === 'STORED' ? <StyledCarouselButton variant="contained"/> :
-                                                <StyledCarouselButton variant="outlined" onClick={() => {setOpenIn(true)}}/>}
-                                        </Tooltip>
-                                    ))}
+                                    </div>
                                 </StyledCarouselContent>
                             </StyledCarouselPaper>
                         ))

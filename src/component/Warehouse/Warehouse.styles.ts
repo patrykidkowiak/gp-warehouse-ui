@@ -12,6 +12,16 @@ export const StyledWarehouse = styled('div')({
     flexDirection: 'column',
 })
 
+export const StyledRows = styled('div')({
+    display: 'flex',
+    gap: '5px',
+    alignItems: 'center',
+})
+
+export const StyledRow = styled('div')({
+    display: 'flex',
+})
+
 export const StyledButtonContainer = styled('div')({
     display: 'flex',
     justifyContent: 'space-between',
@@ -74,7 +84,8 @@ export const StyledCarouselContent = styled('div')({
     margin: 'auto',
     width: '100%',
     gap: '10px',
-    marginTop: '30px'
+    marginTop: '30px',
+    // flexDirection: 'column',
 })
 
 export const StyledCarouselTitle = styled('div')({
