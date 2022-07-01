@@ -75,7 +75,7 @@ export const Warehouse: FC = () => {
         return storedProducts.data?.find(product => product.rack.id === place.rack.id && product.rackColumn.id === place.column.id && product.row.id === place.row.id)
     }
 
-    const productStoredPercentage = 100 - (100 * places.data?.filter(place => place.status !== 'STORED')?.length) / places.data?.length;
+    const productStoredPercentage = 100 - (100 * places.data?.filter(place => place.status !== 'STORED')?.length) / places.data?.length || 0;
 
     return <>
         <StyledWarehouse>
@@ -94,7 +94,7 @@ export const Warehouse: FC = () => {
                         background="#bfbfbf"
                         rounded
                         animate
-                        label={({dataEntry}) => `${dataEntry.value}%`}
+                        label={({dataEntry}) => `${dataEntry.value.toFixed(1)}%`}
                         labelStyle={{
                             fontSize: '25px',
                             fontFamily: 'sans-serif',
@@ -113,8 +113,6 @@ export const Warehouse: FC = () => {
                                 <StyledCarouselTitle>Regał {rack.name}</StyledCarouselTitle>
                                 <StyledCarouselContent>
                                     {places.data?.filter(place => place.rack.id === rack.id).map(place => (
-
-
                                         <Tooltip title={
                                             <>
                                                 <div>{`${rack.name} ${place.row.name} ${place.column.name}`}</div>
@@ -136,7 +134,7 @@ export const Warehouse: FC = () => {
 
             <ProductTable storedProducts={storedProducts.data}/>
 
-            {storedProducts.loading && <LoadingOverlay/>}
+            {(storedProducts.loading || places.loading) && <LoadingOverlay/>}
 
             {inOpen && <ProductInDialog setOpenIn={setOpenIn} inOpen={inOpen} fetchStoredProduct={fetchStoredProduct} places={places}/>}
             {outOpen && <ProductOutDialog setOpenOut={setOpenOut} outOpen={outOpen} fetchStoredProduct={fetchStoredProduct}/>}

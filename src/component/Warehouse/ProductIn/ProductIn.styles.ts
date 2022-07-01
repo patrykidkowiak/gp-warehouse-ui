@@ -15,6 +15,14 @@ export const StyledPlaceSelectors = styled('div')({
     marginTop: '20px',
 })
 
+export const StyledWeights = styled('div')({
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: '20px',
+    gap: '10px'
+})
+
 export const StyledDialogContent = styled(DialogContent)({
     width: '350px',
 })

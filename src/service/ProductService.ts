@@ -1,11 +1,13 @@
 import axios from '../core/utils/axios';
 import { AxiosResponse } from 'axios';
-import { bearerAuth, StoredProduct } from './StoredProductService';
+import { bearerAuth } from './StoredProductService';
 
 export interface Product {
     id: number,
     name: string,
     weight: number,
+    nettoWeight: number,
+    bruttoWeight: number
 }
 
 export class ProductService {

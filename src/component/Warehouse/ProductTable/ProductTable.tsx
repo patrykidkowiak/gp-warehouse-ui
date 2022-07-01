@@ -21,7 +21,9 @@ function createData(storedProduct: StoredProduct): StoredProductRow {
         row: storedProduct.row?.name || '',
         column: storedProduct.rackColumn?.name || '',
         status: storedProduct.status || '',
-        insertDate: formattedInsertDate
+        insertDate: formattedInsertDate,
+        nettoWeight: storedProduct.nettoWeight === null ? '' : `${storedProduct.nettoWeight}kg`,
+        bruttoWeight: storedProduct.bruttoWeight === null ? '' : `${storedProduct.bruttoWeight}kg`,
     };
 }
 
@@ -38,6 +40,8 @@ interface StoredProductRow {
     column: string,
     status: string,
     insertDate: string,
+    nettoWeight: string,
+    bruttoWeight: string
 }
 
 export const ProductTable = (props: ProductTableProps) => {
@@ -69,7 +73,7 @@ export const ProductTable = (props: ProductTableProps) => {
 
 
     useEffect(() => {
-        columns.length = 6;
+        columns.length = 8;
         columns.push(
             {
                 name: 'actions', label: 'Akcje', options: {

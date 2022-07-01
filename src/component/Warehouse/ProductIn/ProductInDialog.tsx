@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, InputLabel, MenuItem, Select } from '@mui/material';
-import { StyledDialogContent, StyledPlaceSelector, StyledPlaceSelectors, StyledProductIn } from './ProductIn.styles';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormHelperText, Input, InputAdornment, InputLabel, MenuItem, OutlinedInput, Select, TextField } from '@mui/material';
+import { StyledDialogContent, StyledPlaceSelector, StyledPlaceSelectors, StyledProductIn, StyledWeights } from './ProductIn.styles';
 import { Response } from '../../../core/utils/interfaces';
 import { Product, ProductService } from '../../../service/ProductService';
 import { useKeycloak } from '@react-keycloak/web';
@@ -25,7 +25,9 @@ export const ProductInDialog: FC<ProductInDialogProps> = (props: ProductInDialog
 
     const [selectedRack, setSelectedRack] = useState<Rack | null>(null);
     const [selectedRow, setSelectedRow] = useState<Row | null>(null);
-    const [selectedColumn, setSelectedColumn] = useState<RackColumn | null>(null)
+    const [selectedColumn, setSelectedColumn] = useState<RackColumn | null>(null);
+    const [selectedNettoWeight, setSelectedNettoWeight] = useState<number>(null);
+    const [selectedBruttoWeight, setSelectedBruttoWeight] = useState<number>(null);
 
     const selectedProduct = products.data?.find(product => product.id === selectedProductId) || null;
 
@@ -64,13 +66,23 @@ export const ProductInDialog: FC<ProductInDialogProps> = (props: ProductInDialog
         props.setOpenIn(false);
     };
 
+    const handleBruttoWeightChange = (event: any) => {
+        setSelectedBruttoWeight(event.target.value);
+    };
+
+    const handleNettoWeightChange = (event: any) => {
+        setSelectedNettoWeight(event.target.value);
+    };
+
     const handlePrint = () => {
 
         const storedProduct: StoredProduct = {
             product: selectedProduct,
             row: selectedRow,
             rackColumn: selectedColumn,
-            rack: selectedRack
+            rack: selectedRack,
+            nettoWeight: selectedNettoWeight,
+            bruttoWeight: selectedBruttoWeight
         }
         StoredProductService.persistStoredProduct(storedProduct, keycloak.token).then((response) => {
             setNextValue(response.data);
@@ -132,6 +144,34 @@ export const ProductInDialog: FC<ProductInDialogProps> = (props: ProductInDialog
                                 </Select>
                                 <FormHelperText id="my-helper-text">Wybierz produkt z listy</FormHelperText>
                             </FormControl>
+
+                            <StyledWeights>
+                                <FormControl>
+                                    <InputLabel htmlFor="brutto-weight-input">Waga brutto</InputLabel>
+                                    <OutlinedInput
+                                        id="brutto-weight-input"
+                                        label="Waga brutto"
+                                        value={selectedBruttoWeight}
+                                        onChange={handleBruttoWeightChange}
+                                        endAdornment={<InputAdornment position="end">kg</InputAdornment>}
+
+                                    />
+                                </FormControl>
+                                <FormControl>
+                                    <InputLabel htmlFor="netto-weight-input">Waga netto</InputLabel>
+                                    <OutlinedInput
+                                        id="netto-weight-input"
+                                        label="Waga netto"
+                                        value={selectedNettoWeight}
+                                        onChange={handleNettoWeightChange}
+                                        endAdornment={<InputAdornment position="end">kg</InputAdornment>}
+
+                                    />
+                                </FormControl>
+                            </StyledWeights>
+                            <FormHelperText id="my-helper-text">Wprowadź wagę palety</FormHelperText>
+
+
 
                             <FormControl>
 

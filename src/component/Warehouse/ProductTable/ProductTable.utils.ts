@@ -1,6 +1,6 @@
 
 export interface Column {
-    name: 'productName' | 'rack' | 'column'  | 'row' | 'status' | 'identifier' | 'insertDate' | 'actions',
+    name: 'productName' | 'rack' | 'column'  | 'row' | 'status' | 'identifier' | 'insertDate' | 'actions' | 'bruttoWeight' | 'nettoWeight',
     label: string,
     options: any
     // minWidth?: number,
@@ -17,6 +17,18 @@ export const columns: Column [] = [
     },
     {
         name: 'productName', label: 'Produkt', options: {
+            filter: true,
+            sort: true,
+        }
+    },
+    {
+        name: 'bruttoWeight', label: 'Waga brutto', options: {
+            filter: true,
+            sort: true,
+        }
+    },
+    {
+        name: 'nettoWeight', label: 'Waga netto', options: {
             filter: true,
             sort: true,
         }

@@ -10,6 +10,8 @@ export interface StoredProduct {
     rack: Rack | null,
     status?: string,
     insertDate?: Date
+    nettoWeight?: number,
+    bruttoWeight?: number
 }
 
 export interface Row {

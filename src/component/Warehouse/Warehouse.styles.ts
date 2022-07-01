@@ -64,7 +64,8 @@ export const StyledCarouselPaper = styled(Paper)({
 })
 
 export const StyledCarouselButton = styled(Button)({
-    height: '30px'
+    height: '15px',
+    minWidth: '15px'
 })
 
 export const StyledCarouselContent = styled('div')({
