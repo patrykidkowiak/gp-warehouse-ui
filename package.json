@@ -25,6 +25,7 @@
     "react-dom": "^17.0.2",
     "react-material-ui-carousel": "^3.4.2",
     "react-minimal-pie-chart": "^8.3.0",
+    "react-qr-barcode-scanner": "^1.0.6",
     "react-router-dom": "^6.2.2",
     "react-scripts": "5.0.0",
     "react-to-print": "^2.14.6",

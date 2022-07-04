@@ -4,6 +4,7 @@ import { StoredProductService } from '../../../service/StoredProductService';
 import { useKeycloak } from '@react-keycloak/web';
 import { StyledDialogContent } from './ProductOut.styles';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import BarcodeScannerComponent from 'react-qr-barcode-scanner';
 
 export interface ProductOutDialogProps {
     setOpenOut: React.Dispatch<React.SetStateAction<boolean>>,
@@ -69,35 +70,46 @@ export const ProductOutDialog: FC<ProductOutDialogProps> = (props) => {
         )
     )
 
+    const [data, setData] = useState('No result');
+
 
     return <Dialog open={props.outOpen} onClose={handleStoredProductOut}>
         <DialogTitle>Wydaj produkt</DialogTitle>
-        <StyledDialogContent>
-            <DialogContentText>
-                Wprowadź identyfikatory produktów które chcesz wydać z magazynu.
-            </DialogContentText>
-            {inputs}
-            <FormControl>
-                {/*<InputLabel htmlFor="my-input">Identyfikator produktu</InputLabel>*/}
-                <TextField id="my-input" label="Identyfikator produktu" aria-describedby="my-helper-text" value={firstInputValue}
-                       onChange={(event) => onFirstInputChanged(storedProductsIdsToOut2.size, event.target.value)}
-                    // @ts-ignore
-                           InputProps={{
-                               endAdornment: (
-                                   <InputAdornment position="end">
-                                       <IconButton
-                                           edge="end"
-                                           color="primary"
-                                           onClick = {() => navigator.clipboard.readText().then(text => onFirstInputChanged(storedProductsIdsToOut2.size, text))}
-                                       >
-                                           <ContentPasteIcon />
-                                       </IconButton>
-                                   </InputAdornment>
-                               ),
-                           }}
-                />
-            </FormControl>
-        </StyledDialogContent>
+        {/*<StyledDialogContent>*/}
+        {/*    <DialogContentText>*/}
+        {/*        Wprowadź identyfikatory produktów które chcesz wydać z magazynu.*/}
+        {/*    </DialogContentText>*/}
+        {/*    {inputs}*/}
+        {/*    <FormControl>*/}
+        {/*        /!*<InputLabel htmlFor="my-input">Identyfikator produktu</InputLabel>*!/*/}
+        {/*        <TextField id="my-input" label="Identyfikator produktu" aria-describedby="my-helper-text" value={firstInputValue}*/}
+        {/*               onChange={(event) => onFirstInputChanged(storedProductsIdsToOut2.size, event.target.value)}*/}
+        {/*            // @ts-ignore*/}
+        {/*                   InputProps={{*/}
+        {/*                       endAdornment: (*/}
+        {/*                           <InputAdornment position="end">*/}
+        {/*                               <IconButton*/}
+        {/*                                   edge="end"*/}
+        {/*                                   color="primary"*/}
+        {/*                                   onClick = {() => navigator.clipboard.readText().then(text => onFirstInputChanged(storedProductsIdsToOut2.size, text))}*/}
+        {/*                               >*/}
+        {/*                                   <ContentPasteIcon />*/}
+        {/*                               </IconButton>*/}
+        {/*                           </InputAdornment>*/}
+        {/*                       ),*/}
+        {/*                   }}*/}
+        {/*        />*/}
+        {/*    </FormControl>*/}
+        {/*</StyledDialogContent>*/}
+        <BarcodeScannerComponent
+            width={500}
+            height={500}
+            onUpdate={(err, result: any) => {
+                if (result) setData(result.text);
+                else setData("Not Found");
+            }}
+        />
+        <p>{data}</p>
         <DialogActions>
             <Button variant="contained" disabled={!storedProductsIdsToOut2.size} onClick={handleStoredProductOut}>Wydaj</Button>
             <Button variant="outlined" onClick={handleCancelProductOut}>Anuluj</Button>

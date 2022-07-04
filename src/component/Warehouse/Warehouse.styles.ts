@@ -1,5 +1,4 @@
 import { styled } from '@mui/styles';
-import { PieChart } from 'react-minimal-pie-chart/types/Chart';
 import Carousel from 'react-material-ui-carousel';
 import { Button, Paper } from '@mui/material';
 import { pink } from '@mui/material/colors';
