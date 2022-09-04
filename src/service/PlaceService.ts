@@ -1,12 +1,19 @@
 import axios from '../core/utils/axios';
 import { AxiosResponse } from 'axios';
-import { bearerAuth, RackColumn, Rack, Row } from './StoredProductService';
+import { bearerAuth, RackColumn, Rack, Row, StoredProduct } from './StoredProductService';
+import { Product } from './ProductService';
 
 export interface Place {
     rack: Rack | null,
     row: Row | null,
     column: RackColumn | null,
     status?: string,
+}
+
+export interface BarcodesInfo {
+    id: number,
+    product: Product,
+    place: Place
 }
 
 export class PlaceService {

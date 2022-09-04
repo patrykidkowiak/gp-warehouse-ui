@@ -121,13 +121,13 @@ export const ProductTable = (props: ProductTableProps) => {
                 idToPrint && productToPrint &&
                 <BarcodesToPrint
                     id={idToPrint}
-                    printCallback= {() => setIdToPrint(null)}
                     product={productToPrint.product}
-                    place={{
-                        rack: productToPrint.rack,
-                        row: productToPrint.row,
-                        column: productToPrint.rackColumn,
-                    }}
+                    printCallback= {() => setIdToPrint(null)}
+                    barcodesInfo={[{
+                        id: idToPrint,
+                        product: productToPrint.product,
+                        place: {rack: productToPrint.rack, row: productToPrint.row, column: productToPrint.rackColumn}
+                    }]}
                 />
             }
         </StyledTableContainer>

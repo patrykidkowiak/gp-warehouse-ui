@@ -40,11 +40,6 @@ export const StyledDiagramsContainer = styled('div')({
 })
 
 export const StyledToPrint = styled('div')({
-    marginTop: '50px',
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'center',
-    height: '1000px',
     '@media screen': {
         visibility: 'hidden',
         display: 'none'
@@ -60,7 +55,13 @@ export const StyledCarousel = styled(Carousel)({
 })
 
 export const StyledBarCode = styled('div')({
-    height: '50%'
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'center',
+    height: '100%',
+    '@media print': {
+        pageBreakAfter: 'always'
+    },
 })
 
 export const StyledPieChart = styled('div')({

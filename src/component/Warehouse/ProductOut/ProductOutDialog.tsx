@@ -1,10 +1,11 @@
-import React, { FC, useEffect, useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@mui/material';
+import React, { FC, useState } from 'react';
+import { Button, Dialog, DialogActions, DialogContentText, DialogTitle, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@mui/material';
 import { StoredProductService } from '../../../service/StoredProductService';
 import { useKeycloak } from '@react-keycloak/web';
 import { StyledDialogContent } from './ProductOut.styles';
 import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import BarcodeScannerComponent from 'react-qr-barcode-scanner';
+import { MobileView } from 'react-device-detect';
 
 export interface ProductOutDialogProps {
     setOpenOut: React.Dispatch<React.SetStateAction<boolean>>,
@@ -18,42 +19,36 @@ export interface StoredProductId {
 }
 
 export const ProductOutDialog: FC<ProductOutDialogProps> = (props) => {
-    const [storedProductsIdsToOut2, setStoredProductsIdsToOut2] = React.useState<Map<number, number>>(new Map());
+    const [storedProductsIdsToOut, setStoredProductsIdsToOut] = React.useState<number[]>([]);
     const [firstInputValue, setFirstInputValue] = useState<string>('');
     const {keycloak} = useKeycloak();
 
     const handleStoredProductOut = () => {
         props.setOpenOut(false);
         try {
-            StoredProductService.setStoredProductAsOut(Array.from(storedProductsIdsToOut2.values()), keycloak.token).then(() => {
+            StoredProductService.setStoredProductAsOut(storedProductsIdsToOut, keycloak.token).then(() => {
                 props.fetchStoredProduct();
             })
         } catch (error) {
             console.error(error)
         }
-
     };
 
     const onInputChanged = (id: number, event: any) => {
-        setStoredProductsIdsToOut2(map => new Map(map.set(id, Number(event.target.value))));
+        setStoredProductsIdsToOut(oldArray => {
+            oldArray[id] = Number(event.target.value)
+            return [...oldArray]
+        } );
     }
 
-    const onFirstInputChanged = (id: number, value: string) => {
+    const onFirstInputChanged = (value: string) => {
         setFirstInputValue(value)
 
         if (value.length >= 10) {
             setFirstInputValue('')
-            setStoredProductsIdsToOut2(map => new Map(map.set(id, Number(value))));
+            setStoredProductsIdsToOut(oldArray => Array.from(new Set([...oldArray,Number(value)])) );
         }
-
-
     }
-
-
-    useEffect(() => {
-        console.log(storedProductsIdsToOut2)
-    }, [storedProductsIdsToOut2])
-
 
     const handleCancelProductOut = () => {
         props.setOpenOut(false);
@@ -61,57 +56,57 @@ export const ProductOutDialog: FC<ProductOutDialogProps> = (props) => {
 
     const inputs: any[] = [];
 
-    storedProductsIdsToOut2.forEach((value, key) =>
+    storedProductsIdsToOut.forEach((value, key) =>
         inputs.push(
-            <FormControl>
-                <Input id={`${key}`} aria-describedby="my-helper-text"
+            <FormControl key={`input-${key}`}>
+                <Input id={`${key}`}  aria-describedby="my-helper-text"
                        onChange={(event) => onInputChanged(key, event)} value={`${String(value).padStart(10, '0')}`}/>
             </FormControl>
         )
     )
 
-    const [data, setData] = useState('No result');
-
-
     return <Dialog open={props.outOpen} onClose={handleStoredProductOut}>
         <DialogTitle>Wydaj produkt</DialogTitle>
-        {/*<StyledDialogContent>*/}
-        {/*    <DialogContentText>*/}
-        {/*        Wprowadź identyfikatory produktów które chcesz wydać z magazynu.*/}
-        {/*    </DialogContentText>*/}
-        {/*    {inputs}*/}
-        {/*    <FormControl>*/}
-        {/*        /!*<InputLabel htmlFor="my-input">Identyfikator produktu</InputLabel>*!/*/}
-        {/*        <TextField id="my-input" label="Identyfikator produktu" aria-describedby="my-helper-text" value={firstInputValue}*/}
-        {/*               onChange={(event) => onFirstInputChanged(storedProductsIdsToOut2.size, event.target.value)}*/}
-        {/*            // @ts-ignore*/}
-        {/*                   InputProps={{*/}
-        {/*                       endAdornment: (*/}
-        {/*                           <InputAdornment position="end">*/}
-        {/*                               <IconButton*/}
-        {/*                                   edge="end"*/}
-        {/*                                   color="primary"*/}
-        {/*                                   onClick = {() => navigator.clipboard.readText().then(text => onFirstInputChanged(storedProductsIdsToOut2.size, text))}*/}
-        {/*                               >*/}
-        {/*                                   <ContentPasteIcon />*/}
-        {/*                               </IconButton>*/}
-        {/*                           </InputAdornment>*/}
-        {/*                       ),*/}
-        {/*                   }}*/}
-        {/*        />*/}
-        {/*    </FormControl>*/}
-        {/*</StyledDialogContent>*/}
-        <BarcodeScannerComponent
-            width={500}
-            height={500}
-            onUpdate={(err, result: any) => {
-                if (result) setData(result.text);
-                else setData("Not Found");
-            }}
-        />
-        <p>{data}</p>
+        <StyledDialogContent>
+            <DialogContentText>
+                Wprowadź identyfikatory produktów które chcesz wydać z magazynu.
+            </DialogContentText>
+            {inputs}
+            <FormControl>
+                {/*<InputLabel htmlFor="my-input">Identyfikator produktu</InputLabel>*/}
+                <TextField id="my-input" label="Identyfikator produktu" aria-describedby="my-helper-text" value={firstInputValue}
+                       onChange={(event) => onFirstInputChanged(event.target.value)}
+                    // @ts-ignore
+                           InputProps={{
+                               endAdornment: (
+                                   <InputAdornment position="end">
+                                       <IconButton
+                                           edge="end"
+                                           color="primary"
+                                           onClick = {() => navigator.clipboard.readText().then(text => onFirstInputChanged(text))}
+                                       >
+                                           <ContentPasteIcon />
+                                       </IconButton>
+                                   </InputAdornment>
+                               ),
+                           }}
+                />
+            </FormControl>
+
+        </StyledDialogContent>
+        <MobileView>
+            <BarcodeScannerComponent
+                width={300}
+                onUpdate={(err, result: any) => {
+                    if (result) {
+                        onFirstInputChanged(result.text)
+                    }
+
+                }}
+            />
+        </MobileView>
         <DialogActions>
-            <Button variant="contained" disabled={!storedProductsIdsToOut2.size} onClick={handleStoredProductOut}>Wydaj</Button>
+            <Button variant="contained" disabled={!storedProductsIdsToOut.length} onClick={handleStoredProductOut}>Wydaj</Button>
             <Button variant="outlined" onClick={handleCancelProductOut}>Anuluj</Button>
         </DialogActions>
     </Dialog>

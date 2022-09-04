@@ -259,7 +259,12 @@ export const ProductInDialog: FC<ProductInDialogProps> = (props: ProductInDialog
                 setSelectedRow(null);
                 setSelectedColumn(null);
             }}
-            place={{rack: selectedRack, row: selectedRow, column: selectedColumn}}/>
+            barcodesInfo={[{
+                id: nextValue,
+                product: selectedProduct,
+                place: {rack: selectedRack, row: selectedRow, column: selectedColumn}
+            }]}
+        />
     </>
 
 
